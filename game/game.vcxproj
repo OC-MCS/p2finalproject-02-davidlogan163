@@ -151,6 +151,25 @@
   <ItemGroup>
     <Text Include="Readme.txt" />
   </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="BombSettings.h" />
+    <ClInclude Include="EnemySettings.h" />
+    <ClInclude Include="GameSettings.h" />
+    <ClInclude Include="Display.h" />
+    <ClInclude Include="MissileSettings.h" />
+    <ClInclude Include="ProjectileSettings.h" />
+    <ClInclude Include="Ship.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="..\..\..\..\..\OneDrive\Desktop\Alien1.jpg" />
+    <Image Include="Alien2.jpg" />
+    <Image Include="Bomb.jpg">
+      <DeploymentContent>true</DeploymentContent>
+    </Image>
+    <Image Include="missile.png" />
+    <Image Include="ship.jpg" />
+    <Image Include="space.jpg" />
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>

@@ -1,134 +1,171 @@
-//=========================================================
-// This is just the starting point for your final project.
-// You are expected to modify and add classes/files as needed.
-// The code below is the original code for our first graphics
-// project (moving the little green ship). 
-//========================================================
+//===============================
+// David Logan
+// 4/19/19
+// Programming Assignment 8
+// Description: Space Invaders
+//===============================
+
 #include <iostream>
-using namespace std;
 #include <SFML/Graphics.hpp>
-using namespace sf; 
+#include "GameSettings.h"
+#include "Ship.h"
+#include "EnemySettings.h"
+#include "ProjectileSettings.h"
+#include "BombSettings.h"
+#include "Display.h"
+#include "Enemies.h"
+#include "MissileSettings.h"
 
-//============================================================
-// YOUR HEADER WITH YOUR NAME GOES HERE. PLEASE DO NOT FORGET THIS
-//============================================================
+using namespace std;
 
-// note: a Sprite represents an image on screen. A sprite knows and remembers its own position
-// ship.move(offsetX, offsetY) adds offsetX, offsetY to 
-// the current position of the ship. 
-// x is horizontal, y is vertical. 
-// 0,0 is in the UPPER LEFT of the screen, y increases DOWN the screen
-void moveShip(Sprite& ship)
-{
-	const float DISTANCE = 5.0;
-
-	if (Keyboard::isKeyPressed(Keyboard::Left))
-	{
-		// left arrow is pressed: move our ship left 5 pixels
-		// 2nd parm is y direction. We don't want to move up/down, so it's zero.
-		ship.move(-DISTANCE, 0);
-	}
-	else if (Keyboard::isKeyPressed(Keyboard::Right))
-	{
-		// right arrow is pressed: move our ship right 5 pixels
-		ship.move(DISTANCE, 0);
-	}
-}
-
-
+void die(string end);
+const int WINDOW_WIDTH = 800;
+const int WINDOW_HEIGHT = 600;
+const float SHIPX = WINDOW_WIDTH / 2.2f;
+const float SHIPY = WINDOW_HEIGHT / 1.2f;
+RenderWindow canvas(VideoMode(WINDOW_WIDTH, WINDOW_HEIGHT), "Space Invaders in C++!");
 
 int main()
 {
-	const int WINDOW_WIDTH = 800;
-	const int WINDOW_HEIGHT = 600;
+	GameSettings game;
 
-	RenderWindow window(VideoMode(WINDOW_WIDTH, WINDOW_HEIGHT), "aliens!");
-	// Limit the framerate to 60 frames per second
-	window.setFramerateLimit(60);
+	canvas.setFramerateLimit(60);
+	//==========================================================================================================
+	//Load the textures and initialize settings
 
-	// load textures from file into memory. This doesn't display anything yet.
-	// Notice we do this *before* going into animation loop.
+	Font Font;
+	if (!Font.loadFromFile("C:\\Windows\\Fonts\\Rage.ttf")) {
+		die("Error opening Arial font!");
+	}
+	Display display(Font);
+
 	Texture shipTexture;
-	if (!shipTexture.loadFromFile("ship.png"))
-	{
-		cout << "Unable to load ship texture!" << endl;
-		exit(EXIT_FAILURE);
+	if (!shipTexture.loadFromFile("ship.jpg")) {
+		die("Error opening ship.jpg!");
 	}
-	Texture starsTexture;
-	if (!starsTexture.loadFromFile("stars.jpg"))
-	{
-		cout << "Unable to load stars texture!" << endl;
-		exit(EXIT_FAILURE);
+	Ship ship(Vector2f(SHIPX, SHIPY), shipTexture);
+	Clock shipShootTimer;
+
+	Texture space;
+	if (!space.loadFromFile("space3.jpg")) {
+		die("Error opening space3.jpg!");
 	}
+	Sprite bkgrd;
+	bkgrd.setTexture(space);
+	bkgrd.setScale(.5, .5);
+	Texture enemy1;
+	if (!enemy1.loadFromFile("Alien1.jpg")) {
+		die("Error opening Alien1.jpg!");
+	}
+	EnemySettings enemies(enemy1);
+	Clock enemyDownTimer;
 
-	// A sprite is a thing we can draw and manipulate on the screen.
-	// We have to give it a "texture" to specify what it looks like
+	Texture enemy2;
+	if (!enemy2.loadFromFile("Alien2.jpg")) {
+		die("Error opening Alien2.jpg!");
+	}
+	Texture bombTexture;
+	if (!bombTexture.loadFromFile("Bomb.jpg")) {
+		die("Error opening Bomb.jpg!");
+	}
+	BombSettings bombs(bombTexture);
+	Clock bombDropTimer;
 
-	Sprite background;
-	background.setTexture(starsTexture);
-	// The texture file is 640x480, so scale it up a little to cover 800x600 window
-	background.setScale(1.5, 1.5);
+	Texture missileTexture;
+	if (!missileTexture.loadFromFile("missile.png")) {
+		die("Error opening missile.png!");
+	}
+	MissileSettings missiles(missileTexture);
 
-	// create sprite and texture it
-	Sprite ship;
-	ship.setTexture(shipTexture);
-
-
-	// initial position of the ship will be approx middle of screen
-	float shipX = window.getSize().x / 2.0f;
-	float shipY = window.getSize().y / 2.0f;
-	ship.setPosition(shipX, shipY);
-
-
-	while (window.isOpen())
+	// Game is running
+	while (canvas.isOpen())
 	{
-		// check all the window's events that were triggered since the last iteration of the loop
-		// For now, we just need this so we can click on the window and close it
 		Event event;
+		unsigned seed = time(0);
+		srand(time(0));
+		double bombDescendDelay = 0.2;
+		int bombDropDelay = 2;
+		int delay = (rand() % bombDropDelay) + 1;
 
-		while (window.pollEvent(event))
-		{
-			// "close requested" event: we close the window
-			if (event.type == Event::Closed)
-				window.close();
-			else if (event.type == Event::KeyPressed)
-			{
-				if (event.key.code == Keyboard::Space)
-				{
-					// handle space bar
+		while (canvas.pollEvent(event)){ 
+			if (event.type == Event::MouseButtonReleased) {
+				Vector2f mousePos = canvas.mapPixelToCoords(Mouse::getPosition(canvas));
+				if (display.Start(mousePos)){
+					game.levelOne(display, ship, Vector2f(SHIPX, SHIPY), missiles, bombs, enemies, enemy1);
+					bombDescendDelay = 0.2;
+					bombDropDelay = 2;
+					bombDropTimer.restart();
 				}
-				
+			}
+
+			 if (event.type == Event::KeyPressed){ 
+				if (event.key.code == Keyboard::Space && shipShootTimer.getElapsedTime().asSeconds() >= 0.1) {
+					ship.shootMissile(missiles);
+					shipShootTimer.restart();
+				}
+			}
+
+			 if (event.type == Event::Closed) {
+				 canvas.close();
+			 }
+
+		}
+
+		if (game.isGameAlive()){
+			if (enemyDownTimer.getElapsedTime().asSeconds() >= bombDescendDelay){
+				enemies.down();
+				enemyDownTimer.restart();
+			}
+
+			if (bombDropTimer.getElapsedTime().asSeconds() >= delay){
+				enemies.bombDrop(bombs);
+				bombDropTimer.restart();
+				delay = (rand() % bombDropDelay) + 1;
+			}
+
+			if (enemies.checkInteraction(missiles)){
+				display.killEnemy();
+			}
+
+			if (ship.checkInteraction(bombs) || enemies.checkPos(ship)) {
+				display.ifShipIsHit();
+				enemies.resetPos();
+			}
+
+			if (enemies.getEnemyNumber() <= 0) {
+				if (bombDropDelay == 2) {
+					game.levelTwo(display, ship, Vector2f(SHIPX, SHIPY), missiles, bombs, enemies, enemy2);
+					bombDropDelay = 2;
+					bombDescendDelay = 0.2;
+				}
+				else
+					game.finish(display);
+			}
+			if (display.getLives() <= 0) {
+				game.finish(display);
 			}
 		}
 
-		//===========================================================
-		// Everything from here to the end of the loop is where you put your
-		// code to produce ONE frame of the animation. The next iteration of the loop will
-		// render the next frame, and so on. All this happens ~ 60 times/second.
-		//===========================================================
+		canvas.draw(bkgrd);
+		display.draw(canvas);
+		ship.draw(canvas);
+		missiles.draw(canvas);
+		bombs.draw(canvas);
+		enemies.draw(canvas);
+		canvas.display();
 
-		// draw background first, so everything that's drawn later 
-		// will appear on top of background
-		window.draw(background);
-
-		moveShip(ship);
-
-		// draw the ship on top of background 
-		// (the ship from previous frame was erased when we drew background)
-		window.draw(ship);
-
-
-		// end the current frame; this makes everything that we have 
-		// already "drawn" actually show up on the screen
-		window.display();
-
-		// At this point the frame we have built is now visible on screen.
-		// Now control will go back to the top of the animation loop
-		// to build the next frame. Since we begin by drawing the
-		// background, each frame is rebuilt from scratch.
-
-	} // end body of animation loop
+		ship.move();
+		missiles.move();
+		missiles.remove();
+		bombs.remove();
+		bombs.move();
+	}
 
 	return 0;
 }
 
+void die(string end)
+{
+	cout << end << endl;
+	exit(-1);
+}
