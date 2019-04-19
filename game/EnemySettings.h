@@ -31,17 +31,16 @@ public:
 	bool checkInteraction(MissileSettings &missiles){
 		list<Projectiles>::iterator obj;
 		list<Projectiles> * ptr = missiles.lists();
-		bool hit = false;
-
-		for (obj = ptr->begin(); obj != ptr->end() && !hit; ){
+		bool checkHit = false;
+		for (obj = ptr->begin(); obj != ptr->end() && !checkHit; ){
 			if (alien.getGlobalBounds().intersects(obj->sprite().getGlobalBounds())){
 				obj = ptr->erase(obj);
-				hit = true;
+				checkHit = true;
 			}
 			else
 				obj++;
 		}
-		return hit;
+		return checkHit;
 	}
 
 	void dropBomb(BombSettings &bombs){
@@ -75,31 +74,25 @@ public:
 		}
 	}
 
-	void resetPos()
-	{
+	void resetPos(){
 		list<Enemies>::iterator obj;
-
-		for (obj = listOfEnemies.begin(); obj != listOfEnemies.end(); obj++)
-		{
+			for (obj = listOfEnemies.begin(); obj != listOfEnemies.end(); obj++){
 			obj->reset();
 		}
 	}
 
 	bool checkInteraction(MissileSettings &missiles){
 		list<Enemies>::iterator obj;
-		bool hit = false;
-
+		bool checkHit = false;
 		for (obj = listOfEnemies.begin(); obj != listOfEnemies.end(); ){
 			if (obj->checkInteraction(missiles)){
 				obj = listOfEnemies.erase(obj);
-				hit = true;
+				checkHit = true;
 			}
 			else
-			{
 				obj++;
-			}
 		}
-		return hit;
+		return checkHit;
 	}
 
 	void addEnemy(Vector2f pos){
@@ -119,19 +112,15 @@ public:
 
 	void draw(RenderWindow &canvas){
 		list<Enemies>::iterator obj;
-
-		for (obj = listOfEnemies.begin(); obj != listOfEnemies.end(); obj++)
-		{
+		for (obj = listOfEnemies.begin(); obj != listOfEnemies.end(); obj++){
 			obj->draw(canvas);
 		}
 	}
 	int getEnemyNumber() const {
 		return listOfEnemies.size();
 	}
-	void removeList()
-	{
+	void removeList(){
 		list<Enemies>::iterator obj;
-
 		for (obj = listOfEnemies.begin(); obj != listOfEnemies.end(); ) {
 			obj = listOfEnemies.erase(obj);
 		}
@@ -140,7 +129,6 @@ public:
 	bool checkPos(Ship &ship){
 		list<Enemies>::iterator obj;
 		bool bottom = false;
-
 		for (obj = listOfEnemies.begin(); obj != listOfEnemies.end() && !bottom; obj++){
 			if (obj->getPosition().y >= ship.getXPosition().y){
 				obj = listOfEnemies.erase(obj);

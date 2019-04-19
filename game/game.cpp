@@ -21,8 +21,8 @@ using namespace std;
 void die(string end);
 const int WINDOW_WIDTH = 800;
 const int WINDOW_HEIGHT = 600;
-const float SHIPX = WINDOW_WIDTH / 2.2f;
-const float SHIPY = WINDOW_HEIGHT / 1.2f;
+const float SHIP_X_POS = WINDOW_WIDTH / 2.2f;
+const float SHIP_Y_POS = WINDOW_HEIGHT / 1.2f;
 RenderWindow canvas(VideoMode(WINDOW_WIDTH, WINDOW_HEIGHT), "Space Invaders in C++!");
 
 int main()
@@ -43,7 +43,7 @@ int main()
 	if (!shipTexture.loadFromFile("ship.jpg")) {
 		die("Error opening ship.jpg!");
 	}
-	Ship ship(Vector2f(SHIPX, SHIPY), shipTexture);
+	Ship ship(Vector2f(SHIP_X_POS, SHIP_Y_POS), shipTexture);
 	Clock shipShootTimer;
 
 	Texture space;
@@ -91,7 +91,7 @@ int main()
 			if (event.type == Event::MouseButtonReleased) {
 				Vector2f mousePos = canvas.mapPixelToCoords(Mouse::getPosition(canvas));
 				if (display.Start(mousePos)){
-					game.levelOne(display, ship, Vector2f(SHIPX, SHIPY), missiles, bombs, enemies, enemy1);
+					game.levelOne(display, ship, Vector2f(SHIP_X_POS, SHIP_Y_POS), missiles, bombs, enemies, enemy1);
 					bombDescendDelay = 0.2;
 					bombDropDelay = 2;
 					bombDropTimer.restart();
@@ -134,7 +134,7 @@ int main()
 
 			if (enemies.getEnemyNumber() <= 0) {
 				if (bombDropDelay == 2) {
-					game.levelTwo(display, ship, Vector2f(SHIPX, SHIPY), missiles, bombs, enemies, enemy2);
+					game.levelTwo(display, ship, Vector2f(SHIP_X_POS, SHIP_Y_POS), missiles, bombs, enemies, enemy2);
 					bombDropDelay = 2;
 					bombDescendDelay = 0.2;
 				}

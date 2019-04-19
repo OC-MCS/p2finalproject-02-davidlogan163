@@ -13,8 +13,7 @@ private:
 public:
 	Display() {}
 
-	Display(Font &font)
-	{
+	Display(Font &font){
 		livesCount = 3;
 		killsCount = 0;
 
@@ -24,14 +23,12 @@ public:
 		dispEnd(font);
 	}
 
-	void ifShipIsHit()
-	{
+	void ifShipIsHit(){
 		livesCount -= 1;
 		livesNum.setString(to_string(livesCount));
 	}
 
-	void killEnemy()
-	{
+	void killEnemy(){
 		bool playerwins = true;
 		killsCount += 1;
 		killsNum.setString(to_string(killsCount));
@@ -39,34 +36,27 @@ public:
 			isGameOver(playerwins);
 		}
 	}
-	int getKills() const
-	{
+	int getKills() const{
 		return killsCount;
 	}
 
-	int getLives() const
-	{
+	int getLives() const{
 		return livesCount;
 	}
 
-	void setLives(int lives)
-	{
+	void setLives(int lives){
 		livesCount = lives;
 		livesNum.setString(to_string(livesCount));
 	}
 
-	void setKills(int kills)
-	{
+	void setKills(int kills){
 		killsCount = kills;
 		killsNum.setString(to_string(killsCount));
 	}
 
-	bool Start(Vector2f mousePosition)
-	{
+	bool Start(Vector2f mousePosition){
 		bool isStartClicked = false;
-
-		if (startBtn.getGlobalBounds().contains(mousePosition))
-		{
+		if (startBtn.getGlobalBounds().contains(mousePosition)){
 			isStartClicked = true;
 			startBtn.setString("");
 			finish.setString("");
@@ -100,9 +90,8 @@ public:
 		if (playerwins) {
 			finish.setString("You Win!");
 		}
-		else {
+		else 
 			finish.setString("You Lose!");
-		}
 	}
 	void draw(RenderWindow &canvas)
 	{
@@ -113,5 +102,4 @@ public:
 		canvas.draw(livesNum);
 		canvas.draw(finish);
 	}
-
 };

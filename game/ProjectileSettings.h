@@ -43,7 +43,7 @@ private:
 public:
 	ProjectileSettings() {}
 
-
+	// Moves the projectiles
 	void move() {
 		list<Projectiles>::iterator obj;
 		for (obj = listOfProjectiles.begin(); obj != listOfProjectiles.end(); obj++) {
