@@ -145,7 +145,7 @@ int main()
 				game.finish(display);
 			}
 		}
-
+		// Draws canvas and menu and enemies and ship
 		canvas.draw(bkgrd);
 		display.draw(canvas);
 		ship.draw(canvas);
@@ -154,6 +154,7 @@ int main()
 		enemies.draw(canvas);
 		canvas.display();
 
+		
 		ship.move();
 		missiles.move();
 		missiles.remove();

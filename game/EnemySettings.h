@@ -64,12 +64,10 @@ public:
 	EnemySettings(Texture &image) {
 		enemy.setTexture(image);
 	}
-
+	// Makes the enemies go down
 	void down(){
 		list<Enemies>::iterator obj;
-
-		for (obj = listOfEnemies.begin(); obj != listOfEnemies.end(); obj++)
-		{
+		for (obj = listOfEnemies.begin(); obj != listOfEnemies.end(); obj++){
 			obj->descend();
 		}
 	}
@@ -119,6 +117,7 @@ public:
 	int getEnemyNumber() const {
 		return listOfEnemies.size();
 	}
+	//Remove and enemy
 	void removeList(){
 		list<Enemies>::iterator obj;
 		for (obj = listOfEnemies.begin(); obj != listOfEnemies.end(); ) {

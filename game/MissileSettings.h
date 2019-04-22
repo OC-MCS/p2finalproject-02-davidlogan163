@@ -6,6 +6,7 @@
 class MissileSettings : public ProjectileSettings {
 private: 
 public:
+	// Default cons
 	MissileSettings() {
 
 	}

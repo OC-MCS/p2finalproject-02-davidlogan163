@@ -63,28 +63,31 @@ public:
 		}
 		return isStartClicked;
 	}
-
+	// Displays lives
 	void dispLives(Font &font) {
 		lives = Text("Lives: ", font, 20);
 		lives.setPosition(20, 560);
 		livesNum = Text(to_string(livesCount), font, 20);
 		livesNum.setPosition(80, 560);
 	}
+	//Displayes kills
 	void dispKills(Font &font) {
 		kills = Text("Kills: ", font, 20);
 		kills.setPosition(725, 560);
 		killsNum = Text(to_string(killsCount), font, 20);
 		killsNum.setPosition(775, 560);
 	}
+	// Display Start
 	void dispStart(Font &font) {
 		startBtn = Text("START", font, 50);
 		startBtn.setPosition(335, 260);
 	}
+	// Display the end button
 	void dispEnd(Font &font) {
 		finish = Text("", font, 50);
 		finish.setPosition(320, 350);
 	}
-
+	// Figure out of player won or lost
 	void isGameOver(bool playerwins){
 		startBtn.setString("START");
 		if (playerwins) {
